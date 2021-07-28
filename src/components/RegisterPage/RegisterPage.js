@@ -1,6 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import firebase from "../../firebase";
+import md5 from "md5";
 
 import "./RegisterPage.css";
 
@@ -8,14 +10,47 @@ function RegisterPage() {
   const {
     register,
     watch,
+    handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+  const [errorFromSubmit, setErrorFromSubmit] = useState();
+  const [loading, setLoading] = useState(false);
+
   const password = useRef();
   password.current = watch("password");
 
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      let createdUser = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(data.email, data.password);
+
+      await createdUser.user.updateProfile({
+        displayName: data.name,
+        photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`,
+      });
+      console.log("createdUser", createdUser);
+
+      await firebase.database().ref("users").child(createdUser.user.uid).set({
+        name: createdUser.user.displayName,
+        image: createdUser.user.photoURL,
+      });
+
+      setLoading(false);
+    } catch (error) {
+      setErrorFromSubmit(error.message);
+      setLoading(false);
+      console.log("error", error.message);
+      setTimeout(() => {
+        setErrorFromSubmit("");
+      }, 5000);
+    }
+  };
+
   return (
     <div className="auth-wrapper">
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h1>Register</h1>
 
         <label>Email</label>
@@ -61,7 +96,8 @@ function RegisterPage() {
         {errors.password_confirm && errors.password_confirm.type === "validate" && (
           <p> the password do not match</p>
         )}
-        <input type="submit" value="회원가입" />
+        {errorFromSubmit && <p>{errorFromSubmit}</p>}
+        <input type="submit" value="회원가입" disabled={loading} />
 
         <Link style={{ color: "gray", textDecoration: "none" }} to="login">
           이미 아이디가 있다면...
