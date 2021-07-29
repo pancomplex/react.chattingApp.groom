@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useHistory, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "./firebase";
-import { setUser } from "./redux/actions/user_action";
+import { setUser, clearUser } from "./redux/actions/user_action";
 
 import ChatPage from "./components/ChatPage/ChatPage";
 import LoginPage from "./components/LoginPage/LoginPage";
@@ -21,6 +21,7 @@ function App() {
         dispatch(setUser(user));
       } else {
         history.push("/login");
+        dispatch(clearUser());
       }
     });
   }, []);
@@ -30,7 +31,7 @@ function App() {
       <h1
         style={{
           width: "100vw",
-          height: "100vh",
+          minHeight: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
