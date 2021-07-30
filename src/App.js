@@ -15,7 +15,6 @@ function App() {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log("user", user);
       if (user) {
         dispatch(setUser(user)); // 동기실행으로 리덕스에 올라간 뒤에 페이지를 넘기려면?
         history.push("/");
