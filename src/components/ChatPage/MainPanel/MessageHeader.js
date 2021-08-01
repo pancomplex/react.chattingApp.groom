@@ -6,6 +6,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Image from "react-bootstrap/Image";
 import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
 import { FaLock } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -53,19 +55,31 @@ function MessageHeader() {
         </Row>
         <Row>
           <Col>
-            <Accordion defaultActiveKey="0">
-              {/* <Accordion.Item>
-                <Accordion.Header>Accordion Item #1</Accordion.Header>
-                <Accordion.Body>Lorem ipsum dolor sit amet,</Accordion.Body>
-              </Accordion.Item> */}
+            <Accordion>
+              <Card>
+                <Card.Header style={{ padding: "0 1rem" }}>
+                  <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                    Click me!
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>Hello! I'm the body</Card.Body>
+                </Accordion.Collapse>
+              </Card>
             </Accordion>
           </Col>
           <Col>
             <Accordion>
-              {/* <Accordion.Item eventKey="1">
-                <Accordion.Header>Accordion Item #2</Accordion.Header>
-                <Accordion.Body>Lorem ipsum dolor sit amet, consectetur</Accordion.Body>
-              </Accordion.Item> */}
+              <Card>
+                <Card.Header style={{ padding: "0 1rem" }}>
+                  <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                    Click me!
+                  </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>Hello! I'm the body</Card.Body>
+                </Accordion.Collapse>
+              </Card>
             </Accordion>
           </Col>
         </Row>
