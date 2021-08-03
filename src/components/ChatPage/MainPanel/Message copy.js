@@ -1,5 +1,5 @@
 import React from "react";
-import Toast from "react-bootstrap/Toast";
+import Media from "react-bootstrap/Media";
 import moment from "moment";
 
 function Message(message, user) {
@@ -18,22 +18,30 @@ function Message(message, user) {
 
   return (
     <div>
-      <Toast>
-        <Toast.Header>
-          <img src={message.user.image} className="rounded me-2" alt={message.user.name} />
-          <strong className="me-auto">{message.user.name}</strong>
-          <small style={{ fontSize: "10px", color: "gray" }}>
-            {timeFromNow(message.timestamp)}
-          </small>
-        </Toast.Header>
-        <Toast.Body style={{ backgroundColor: isMessageMine(message, user) && "#ececec" }}>
+      <Media style={{ marginBottom: "3px" }}>
+        <img
+          style={{ borderRadius: "10px" }}
+          width={48}
+          height={48}
+          className="mr-3"
+          src={message.user.image}
+          alt={message.user.name}
+        />
+
+        <Media.body style={{ backgroundColor: isMessageMine(message, user) && "#ececec" }}>
+          <h6>
+            {message.user.name}{" "}
+            <span style={{ fontSize: "10px", color: "gray" }}>
+              {timeFromNow(message.timestamp)}
+            </span>
+          </h6>
           {isImage(message) ? (
             <img style={{ maxWidth: "300px" }} alt="이미지" src={message.image} />
           ) : (
             <p>{message.content}</p>
           )}
-        </Toast.Body>
-      </Toast>
+        </Media.body>
+      </Media>
     </div>
   );
 }
