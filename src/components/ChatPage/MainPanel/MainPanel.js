@@ -1,42 +1,50 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import firebase from "../../../firebase";
 
 import MessageHeader from "./MessageHeader";
 import Message from "./Message";
 import MessageForm from "./MessageForm";
 
-export class MainPanel extends Component {
-  state = { messages: [], messagesRef: firebase.database().ref("messages"), messagesLoading: true };
+function MainPanel() {
+  const [messages, setMessages] = useState([]);
+  const [messagesRef, setMessagesRef] = useState(firebase.database().ref("messages"));
+  const [messagesLoading, setMessagesLoading] = useState(true);
 
-  componentDidUpdate() {
-    const { chatRoom } = this.props;
-    console.log("componentMounted,", chatRoom);
+  const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+  const user = useSelector((state) => state.user.currentUser);
+
+  console.log(`selector check.. chatRoom : ${chatRoom}, user : ${user}`);
+
+  // if (chatRoom) {
+  //   console.log(chatRoom.id);
+  // }
+
+  useEffect(() => {
+    console.log("useEffect, chatRoom : ", chatRoom);
     if (chatRoom) {
-      this.addMessagesListeners(chatRoom.id);
+      addMessagesListeners(chatRoom.id);
     }
-  }
+  }, []);
 
-  addMessagesListeners(chatRoomId) {
+  const addMessagesListeners = (chatRoomId) => {
+    console.log("listening");
     let messagesArray = [];
-    this.state.messagesRef.child(chatRoomId).on("child_added", (DataSnapshot) => {
-      messagesArray.push(DataSnapshot.val());
-      console.log("data received", DataSnapshot.val());
-      console.log("messagesArray", messagesArray);
-      this.setState({ messages: messagesArray, messagesLoading: false });
-      console.log("MessagesListen, setState:", this.state.messages);
+    messagesRef.child(chatRoomId).on("child_added", (dataSnapshot) => {
+      messagesArray.push(dataSnapshot.val());
+      setMessages(messagesArray);
+      setMessagesLoading(false);
     });
-  }
+  };
 
-  renderMessages = (messages) =>
+  const renderMessages = (messages) => {
+    console.log("render message, input messages : ", messages);
+
     messages.length > 0 &&
-    messages.map((message) => (
-      <Message key={message.timestamp} message={message} user={this.props.user} />
-    ));
-
-  render() {
-    const { messages } = this.state;
-    return (
+      messages.map((message) => <Message key={message.timestamp} message={message} user={user} />);
+  };
+  return (
+    <div>
       <div style={{ padding: "2rem 2rem 0 2rem" }}>
         <MessageHeader />
 
@@ -51,21 +59,13 @@ export class MainPanel extends Component {
             overflowY: "auto",
           }}
         >
-          {this.renderMessages(messages)}
+          {renderMessages(messages)}
         </div>
 
         <MessageForm />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-const mapStateToProps = (state) => {
-  console.log("mapStateTopProps", state.chatRoom.currentChatRoom);
-  return {
-    user: state.user.currentUser,
-    chatRoom: state.chatRoom.currentChatRoom,
-  };
-};
-
-export default connect(mapStateToProps)(MainPanel);
+export default MainPanel;

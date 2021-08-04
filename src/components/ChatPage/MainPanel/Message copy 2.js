@@ -7,17 +7,18 @@ function Message(message, user) {
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   const isImage = (message) => {
+    console.log("isImage");
     return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
   };
 
   const isMessageMine = (message, user) => {
+    console.log("isMine");
     return message.user.id === user.uid;
   };
 
   return (
     <div>
-      {message}
-      {/* <Toast>
+      <Toast>
         <Toast.Header>
           <img src={message.user.image} className="rounded me-2" alt={message.user.name} />
           <strong className="me-auto">{message.user.name}</strong>
@@ -32,7 +33,7 @@ function Message(message, user) {
             <p>{message.content}</p>
           )}
         </Toast.Body>
-      </Toast> */}
+      </Toast>
     </div>
   );
 }

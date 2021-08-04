@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -13,6 +15,8 @@ import { MdFavorite } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 
 function MessageHeader() {
+  const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+
   return (
     <div
       style={{
@@ -29,7 +33,8 @@ function MessageHeader() {
           <Col>
             <h2>
               <FaLock />
-              ChatRoomName
+              chatroom name
+              {/* {chatRoom.name} */}
               <MdFavorite />
             </h2>
           </Col>
@@ -49,7 +54,9 @@ function MessageHeader() {
         <Row>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <p>
-              <Image src="" /> username
+              <Image src="" />
+              user name
+              {/* {chatRoom.createdBy.name} */}
             </p>
           </div>
         </Row>

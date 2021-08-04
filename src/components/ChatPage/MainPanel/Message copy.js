@@ -7,12 +7,10 @@ function Message(message, user) {
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   const isImage = (message) => {
-    console.log("isImage");
     return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
   };
 
   const isMessageMine = (message, user) => {
-    console.log("isMine");
     return message.user.id === user.uid;
   };
 
