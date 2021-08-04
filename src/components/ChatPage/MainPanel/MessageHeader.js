@@ -14,8 +14,11 @@ import { FaLock } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 
-function MessageHeader() {
+function MessageHeader({ handleSearchChange }) {
   const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+
+  const chatRoomName = chatRoom ? chatRoom.name : "ChatRoom Name";
+  const userName = chatRoom ? chatRoom.createdBy.name : "User Name";
 
   return (
     <div
@@ -33,8 +36,7 @@ function MessageHeader() {
           <Col>
             <h2>
               <FaLock />
-              chatroom name
-              {/* {chatRoom.name} */}
+              {chatRoomName}
               <MdFavorite />
             </h2>
           </Col>
@@ -44,6 +46,7 @@ function MessageHeader() {
                 <AiOutlineSearch />
               </InputGroup.Text>
               <FormControl
+                onChange={handleSearchChange}
                 placeholder="Search Messages"
                 aria-label="Search"
                 aria-describedby="basic-addon1"
@@ -55,8 +58,7 @@ function MessageHeader() {
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <p>
               <Image src="" />
-              user name
-              {/* {chatRoom.createdBy.name} */}
+              {userName}
             </p>
           </div>
         </Row>
