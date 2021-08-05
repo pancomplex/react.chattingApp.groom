@@ -14,6 +14,7 @@ function UserPanel() {
 
   const inputOpenImageRef = useRef();
   const handleOpenImageRef = () => {
+    console.log("check");
     inputOpenImageRef.current.click();
   };
   const handleUploadImage = async (event) => {

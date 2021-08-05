@@ -35,7 +35,7 @@ function ChatRooms() {
 
     chatRoomsRef.on("child_added", (DataSnapshot) => {
       chatRoomsArray.push(DataSnapshot.val());
-      console.log(chatRoomsArray);
+      console.log("chatRoomsArray :", chatRoomsArray);
       setChatRooms(chatRoomsArray);
     });
   };
@@ -86,10 +86,10 @@ function ChatRooms() {
 
   const renderChatRooms = (chatRooms) => {
     if (chatRooms.length > 0) {
-      chatRooms.map((room) => (
+      return chatRooms.map((room) => (
         <li
           key={room.id}
-          // onClick={changChatRoom(room)}
+          onClick={() => changeChatRoom(room)}
           style={{
             backgroundColor: room.id === activeChatRoomId && "#ffffff45",
             cursor: "pointer",
@@ -101,7 +101,7 @@ function ChatRooms() {
     }
   };
 
-  const changChatRoom = (room) => {
+  const changeChatRoom = (room) => {
     // dispatch(setCurrentChatRoom(room));
     setActiveChatRoomId(room.id);
   };
@@ -117,7 +117,7 @@ function ChatRooms() {
         }}
       >
         <FaRegSmileWink style={{ marginRight: 3 }} />
-        CHAT ROOMS {""} (1)
+        CHAT ROOMS {""} ({chatRooms.length})
         <FaPlus
           style={{
             position: "absolute",
