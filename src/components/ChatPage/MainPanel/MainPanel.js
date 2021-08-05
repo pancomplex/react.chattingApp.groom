@@ -33,7 +33,7 @@ function MainPanel() {
   };
 
   const handleSearchMessages = () => {
-    const chatRoomMessages = { ...messages };
+    const chatRoomMessages = [...messages];
     const regex = new RegExp(searchTerm, "gi");
     const searchResults = chatRoomMessages.reduce((acc, message) => {
       if ((message.content && message.content.match(regex)) || message.user.name.match(regex)) {
@@ -49,9 +49,9 @@ function MainPanel() {
     setSearchLoading(true);
     setSearchTerm(event.target.value);
   };
-  // useEffect(() => {
-  //   handleSearchMessages();
-  // }, [searchTerm]);
+  useEffect(() => {
+    handleSearchMessages();
+  }, [searchTerm]);
 
   const renderMessages = (messages) => {
     if (messages.length > 0) {
