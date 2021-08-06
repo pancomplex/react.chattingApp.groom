@@ -31,9 +31,17 @@ function ChatRooms() {
   }, [chatRooms]);
 
   // componentWillUnmount() {
-  //   this.state.chatRooms.off();
+  //  chatRoomsRef.off();
+  //  chatRooms.forEach(chatRoom =>{messagesRef.child(chatRoom.id).off();});
   // }
-
+  useEffect(() => {
+    return () => {
+      chatRoomsRef.off();
+      chatRooms.forEach((chatRoom) => {
+        messagesRef.child(chatRoom.id).off();
+      });
+    };
+  }, []);
   // let chatRoomsArray = [];
 
   // chatRoomsRef.on("child_added", (DataSnapshot) => {
@@ -62,7 +70,34 @@ function ChatRooms() {
   const handleNotification = (chatRoomId, currentChatRoomId, notifications, DataSnapshot) => {
     let index = notifications.findIndex((notification) => notification.id === chatRoomId);
 
-    setNotifications();
+    if (index === -1) {
+      notifications.push({
+        id: chatRoomId,
+        total: DataSnapshot.numChildren(),
+        lastKnownTotal: DataSnapshot.numChildren(),
+        count: 0,
+      });
+    } else {
+      if (chatRoomId !== currentChatRoomId) {
+        let lastTotal = notifications[index].lastKnownTotal;
+        if (DataSnapshot.numChildren() - lastTotal > 0) {
+          notifications[index].count = DataSnapshot.numChildren() - lastTotal;
+        }
+      }
+      notifications[index].total = DataSnapshot.numChildren();
+    }
+
+    setNotifications(notifications);
+  };
+  const getNotificationCount = (room) => {
+    let count = 0;
+    notifications.forEach((notification) => {
+      if (notification.id === room.id) {
+        count = notification.count;
+      }
+    });
+    console.log(count);
+    if (count > 0) return count;
   };
 
   useEffect(() => {
@@ -123,7 +158,7 @@ function ChatRooms() {
         >
           # {room.name}
           <Badge style={{ float: "right", backgroundColor: "crimson" }} bg="danger">
-            1
+            {getNotificationCount(room)}
           </Badge>
         </li>
       ));
@@ -134,6 +169,19 @@ function ChatRooms() {
     setActiveChatRoomId(room.id);
     dispatch(setCurrentChatRoom(room));
     dispatch(setPrivateChatRoom(false));
+
+    clearNotifications(room);
+  };
+
+  const clearNotifications = (chatRoom) => {
+    let index = notifications.findIndex((notification) => notification.id === chatRoom.id);
+
+    if (index !== -1) {
+      let updatedNotifications = [...notifications];
+      updatedNotifications[index].lastKnownTotal = notifications[index].total;
+      updatedNotifications[index].count = 0;
+      setNotifications(updatedNotifications);
+    }
   };
 
   return (
