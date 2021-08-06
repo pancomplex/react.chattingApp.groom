@@ -29,6 +29,7 @@ function DirectMessages() {
   };
 
   const renderDirectMessages = (users) => {
+    console.log();
     if (users.length > 0) {
       return users.map((user) => (
         <li

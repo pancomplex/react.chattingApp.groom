@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import firebase from "../../../firebase";
-import { setCurrentChatRoom } from "../../../redux/actions/chatRoom_action";
+import { setCurrentChatRoom, setPrivateChatRoom } from "../../../redux/actions/chatRoom_action";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Badge from "react-bootstrap/Badge";
 import { FaRegSmileWink, FaPlus } from "react-icons/fa";
 
 function ChatRooms() {
@@ -14,11 +15,14 @@ function ChatRooms() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [chatRoomsRef, setChatRoomsRef] = useState(firebase.database().ref("chatRooms"));
+  const [messagesRef, setMessagesRef] = useState(firebase.database().ref("messages"));
   const [chatRooms, setChatRooms] = useState([]);
   const [firstLoad, setFirstLoad] = useState(true);
   const [activeChatRoomId, setActiveChatRoomId] = useState("");
+  const [notifications, setNotifications] = useState([]);
 
   const currentUser = useSelector((state) => state.user.currentUser);
+  const currentChatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
 
   const dispatch = useDispatch();
 
@@ -43,7 +47,22 @@ function ChatRooms() {
       chatRoomsArray.push(DataSnapshot.val());
       // console.log("chatRoomsArray :", chatRoomsArray);
       setChatRooms(chatRoomsArray);
+      addNotificationListener(DataSnapshot.key);
     });
+  };
+
+  const addNotificationListener = (chatRoomId) => {
+    messagesRef.child(chatRoomId).on("value", (DataSnapshot) => {
+      if (currentChatRoom) {
+        handleNotification(chatRoomId, currentChatRoom.id, notifications, DataSnapshot);
+      }
+    });
+  };
+
+  const handleNotification = (chatRoomId, currentChatRoomId, notifications, DataSnapshot) => {
+    let index = notifications.findIndex((notification) => notification.id === chatRoomId);
+
+    setNotifications();
   };
 
   useEffect(() => {
@@ -103,14 +122,18 @@ function ChatRooms() {
           }}
         >
           # {room.name}
+          <Badge style={{ float: "right", backgroundColor: "crimson" }} bg="danger">
+            1
+          </Badge>
         </li>
       ));
     }
   };
 
   const changeChatRoom = (room) => {
-    dispatch(setCurrentChatRoom(room));
     setActiveChatRoomId(room.id);
+    dispatch(setCurrentChatRoom(room));
+    dispatch(setPrivateChatRoom(false));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import Container from "react-bootstrap/Container";
@@ -10,15 +10,16 @@ import Image from "react-bootstrap/Image";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { FaLock } from "react-icons/fa";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 
 function MessageHeader({ handleSearchChange }) {
   const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
+  const isPrivateChatRoom = useSelector((state) => state.chatRoom.isPrivateChatRoom);
 
   const chatRoomName = chatRoom ? chatRoom.name : "ChatRoom Name";
-  const userName = chatRoom.createdBy ? chatRoom.createdBy.name : "";
+  // userName = chatRoom.createdBy ? chatRoom.createdBy.name : "";
 
   return (
     <div
@@ -35,8 +36,12 @@ function MessageHeader({ handleSearchChange }) {
         <Row>
           <Col>
             <h2>
-              <FaLock />
-              {chatRoomName}
+              {isPrivateChatRoom ? (
+                <FaLock style={{ marginBottom: "10px" }} />
+              ) : (
+                <FaLockOpen style={{ marginBottom: "10px" }} />
+              )}
+              {` ${chatRoomName} `}
               <MdFavorite />
             </h2>
           </Col>
@@ -58,7 +63,7 @@ function MessageHeader({ handleSearchChange }) {
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <p>
               <Image src="" />
-              {userName}
+              {/* {userName} */}
             </p>
           </div>
         </Row>
