@@ -24,12 +24,16 @@ function MainPanel() {
   }, [chatRoom]);
 
   const addMessagesListeners = (chatRoomId) => {
+    // console.log("listening");
     let messagesArray = [];
+
     messagesRef.child(chatRoomId).on("child_added", (dataSnapshot) => {
       messagesArray.push(dataSnapshot.val());
-      setMessages(messagesArray);
-      setMessagesLoading(false);
     });
+
+    setMessages(messagesArray);
+    // console.log("setMessage");
+    setMessagesLoading(false);
   };
 
   const handleSearchMessages = () => {

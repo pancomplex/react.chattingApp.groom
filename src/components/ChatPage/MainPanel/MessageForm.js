@@ -51,6 +51,7 @@ function MessageForm() {
       await messagesRef.child(chatRoom.id).push().set(createMessage());
       setLoading(false);
       setContent("");
+      console.log("content clear");
       setErrors([]);
     } catch (error) {
       setErrors((pre) => pre.concat(error.message));

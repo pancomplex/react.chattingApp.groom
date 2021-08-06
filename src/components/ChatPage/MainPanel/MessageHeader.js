@@ -18,7 +18,7 @@ function MessageHeader({ handleSearchChange }) {
   const chatRoom = useSelector((state) => state.chatRoom.currentChatRoom);
 
   const chatRoomName = chatRoom ? chatRoom.name : "ChatRoom Name";
-  const userName = chatRoom ? chatRoom.createdBy.name : "User Name";
+  const userName = chatRoom.createdBy ? chatRoom.createdBy.name : "";
 
   return (
     <div

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../../firebase";
+import { setCurrentChatRoom, setPrivateChatRoom } from "../../../redux/actions/chatRoom_action";
 
 import { FaRegSmile } from "react-icons/fa";
 
@@ -9,7 +10,7 @@ function DirectMessages() {
   const [usersRef, setUsersRef] = useState(firebase.database().ref("users"));
 
   const currentUser = useSelector((state) => state.user.currentUser);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     addUsersListeners(currentUser.uid);
   }, [currentUser]);
@@ -27,8 +28,36 @@ function DirectMessages() {
     });
   };
 
-  const renderDirectMessages = (users) =>
-    users.length > 0 && users.map((user) => <li key={user.uid}># {user.name}</li>);
+  const renderDirectMessages = (users) => {
+    if (users.length > 0) {
+      return users.map((user) => (
+        <li
+          key={user.uid}
+          onClick={() => {
+            changeChatRoom(user);
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          # {user.name}
+        </li>
+      ));
+    }
+  };
+
+  const changeChatRoom = (user) => {
+    const chatRoomId = getChatRoomId(user.uid);
+    const chatRoomData = {
+      id: chatRoomId,
+      name: user.name,
+    };
+    dispatch(setCurrentChatRoom(chatRoomData));
+    dispatch(setPrivateChatRoom(true));
+  };
+
+  const getChatRoomId = (userId) => {
+    const currentUserId = currentUser.uid;
+    return userId > currentUserId ? `${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
+  };
 
   return (
     <div>

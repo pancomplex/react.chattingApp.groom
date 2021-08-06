@@ -3,7 +3,7 @@ import Media from "react-bootstrap/Media";
 import moment from "moment";
 
 function Message({ message, user }) {
-  console.log("message rendering", message, user);
+  // console.log("message rendering");
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   const isImage = (message) => {

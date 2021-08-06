@@ -24,21 +24,28 @@ function ChatRooms() {
 
   useEffect(() => {
     addChatRoomsListeners();
-  }, []);
+  }, [chatRooms]);
 
   // componentWillUnmount() {
   //   this.state.chatRooms.off();
   // }
 
+  // let chatRoomsArray = [];
+
+  // chatRoomsRef.on("child_added", (DataSnapshot) => {
+  //   chatRoomsArray.push(DataSnapshot.val());
+  //   setChatRooms(chatRoomsArray);
+  // });
+
   const addChatRoomsListeners = () => {
     let chatRoomsArray = [];
-
     chatRoomsRef.on("child_added", (DataSnapshot) => {
       chatRoomsArray.push(DataSnapshot.val());
-      console.log("chatRoomsArray :", chatRoomsArray);
+      // console.log("chatRoomsArray :", chatRoomsArray);
       setChatRooms(chatRoomsArray);
     });
   };
+
   useEffect(() => {
     setFirstChatRoom();
   }, [chatRooms]);
@@ -46,7 +53,7 @@ function ChatRooms() {
   const setFirstChatRoom = () => {
     const firstChatRoom = chatRooms[0];
     if (firstLoad && chatRooms.length > 0) {
-      // dispatch(setCurrentChatRoom)(firstChatRoom);
+      dispatch(setCurrentChatRoom(firstChatRoom));
       setActiveChatRoomId(firstChatRoom.id);
       setFirstLoad(false);
     }
@@ -102,7 +109,7 @@ function ChatRooms() {
   };
 
   const changeChatRoom = (room) => {
-    // dispatch(setCurrentChatRoom(room));
+    dispatch(setCurrentChatRoom(room));
     setActiveChatRoomId(room.id);
   };
 
