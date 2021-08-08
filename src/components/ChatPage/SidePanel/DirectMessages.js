@@ -65,7 +65,7 @@ function DirectMessages() {
       <span
         style={{
           display: "flex",
-          alignItems: "cneter",
+          alignItems: "center",
         }}
       >
         <FaRegSmile style={{ marginRight: 3 }} />
